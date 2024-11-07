@@ -1,0 +1,14 @@
+[Unit]
+Description=Runs the raven server
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /root/raven/server/raven_server.py
+Restart=always
+RestartSec=5   # Restart after 5 seconds if the script crashes
+User=root
+WorkingDirectory=/root/raven/server
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
