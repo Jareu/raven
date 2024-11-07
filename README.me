@@ -1,0 +1,12 @@
+# Raven Server
+
+Raven Server is a Flask application that uses the OpenAI API to generate text and the ElevenLabs API to generate audio.
+
+To run the server, use the following command:
+
+```
+docker run -p 5000:5000 \
+    -e OPENAI_API_KEY=${OPENAI_API_KEY} \
+    -e ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY} \
+    raven-server
+```
