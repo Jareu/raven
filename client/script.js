@@ -3,9 +3,9 @@ const questionInput = document.getElementById('questionInput');
 const responseOutput = document.getElementById('responseOutput');
 const subtitleBox = document.getElementById('subtitleBox');
 
-async function playAudio(text) {
+async function playAudioAsync(text) {
     try {                    
-        const response = await fetch('http://127.0.0.1:4999/get_fortune_audio', {
+        const response = await fetch('/raven_server.php/get_fortune_audio', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({"text": text})
@@ -38,30 +38,43 @@ async function handleQuestion() {
     const question = questionInput.value.trim();
     if (question) {
         // Clear previous response and show loading
+        $("#responseOutput").show();
         responseOutput.innerText = "The raven is pondering your question...";
         
         try {
-            // Step 1: Get text response and audio URL
-            const response = await fetch('http://127.0.0.1:4999/get_fortune', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ question })
-            });
+            var respone = await getFortuneAsync(question);
 
-            const data = await response.json();
-            
-            // Handle subtitles
-            subtitleBox.innerText = data.text;
-            responseOutput.innerText = "";
-            subtitleBox.style.display = "block";
+            handleSubtitles(respone);
 
-            await playAudio(data.text);
+            await playAudioAsync(respone);
             
         } catch (error) {
+            $("#responseOutput").show();
             responseOutput.innerText = "The raven encountered an error...";
             console.error(error);
         }
     }
+}
+
+async function getFortuneAsync(question)
+{
+    const response = await fetch('/raven_server.php/get_fortune', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ question })
+    });
+
+    const data = await response.json();
+
+    return data.text;
+}
+
+function handleSubtitles(text)
+{
+    subtitleBox.innerText = text;
+    responseOutput.innerText = "";
+    $("#responseOutput").hide();
+    subtitleBox.style.display = "block";
 }
 
 askButton.addEventListener('click', handleQuestion);

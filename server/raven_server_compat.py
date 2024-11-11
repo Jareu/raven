@@ -130,8 +130,8 @@ class RavenServer:
 
     def run(self, debug=False):
         """Run the Flask application."""
-        self.app.run(debug=debug)
+        self.app.run(debug=debug, host='0.0.0.0', port='5001')
 
 if __name__ == '__main__':
     server = RavenServer()
-    server.run(debug=True)
+    server.run()
